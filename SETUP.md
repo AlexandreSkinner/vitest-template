@@ -86,5 +86,32 @@ Realiza a instalação do eslint, bem como configura o padrão da sintaxe do typ
   ## Inicializando o eslint
   O eslint serve para pontuar erros de sintaxe e formatar o código fonte que estiver fora da especificação standard javascript style.
 ```
-  ~/projeto/compras
+  ~/projeto/vitest-template
   » npm init @eslint/config
+
+```
+Abaixo temos um exemplo do arquivo de configuração do eslint **.eslintrc.json**
+
+## Arquivo de configuração do lint (.eslintrc.json)
+```
+{
+    "env": {
+        "es2021": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": "standard-with-typescript",
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": ["./tsconfig.json"]
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        "@typescript-eslint/semi": "off",
+        "semi": [2, "always"]
+    }
+}
