@@ -76,3 +76,15 @@ Este arquivo é inspecionado pelo typescript no momento da compilação
   "include": ["src", "test"]
 }
 ```
+# Instalando o ESLINT
+Realiza a instalação do eslint, bem como configura o padrão da sintaxe do typescript tendo por base as regras definidas no style standard-with-typescript.
+```
+  ~/projeto/vitest-template
+  » npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint eslint-plugin-node
+
+```
+  ## Inicializando o eslint
+  O eslint serve para pontuar erros de sintaxe e formatar o código fonte que estiver fora da especificação standard javascript style.
+```
+  ~/projeto/compras
+  » npm init @eslint/config
