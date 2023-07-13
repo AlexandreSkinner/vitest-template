@@ -4,7 +4,7 @@ Cria a pasta do Projeto como uma subpasta de **projeto**.
 ```
 ~/projeto
 » mkdir vitest-template
-» cd compras
+» cd vitest-template
 vitest-tamplate on  master [?]
 ```
 # Inicializar o GIT
@@ -33,6 +33,13 @@ Esta biblioteca é responsavel por padronizar as mensagens dos nossos commit. Se
 ```
 # Cria arquivo .gitignore
 Este arquivo serve para informamos as pastas / arquivos para os quais não desejamos controlar versão.
+```
+node_modules
+coverage
+dist
+.env
+VSCode.md
+```
 
 # Instalar o Typescript
 Instala o compilador da linguagem de programação Typescript e os types do *node* que adicina tipagem ao mesmo, ajudando no intellisence dos comandos
@@ -83,6 +90,17 @@ Realiza a instalação do eslint, bem como configura o padrão da sintaxe do typ
   » npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint eslint-plugin-node
 
 ```
+Importante que sejam nas versões abaixo:
+```
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.44.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+```
   ## Inicializando o eslint
   O eslint serve para pontuar erros de sintaxe e formatar o código fonte que estiver fora da especificação standard javascript style.
 ```
@@ -95,27 +113,27 @@ Abaixo temos um exemplo do arquivo de configuração do eslint **.eslintrc.json*
 ## Arquivo de configuração do lint (.eslintrc.json)
 ```
 {
-    "env": {
-        "es2021": true,
-        "node": true,
-        "jest": true
-    },
-    "extends": "standard-with-typescript",
-    "overrides": [
-    ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": ["./tsconfig.json"]
-    },
-    "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "rules": {
-        "@typescript-eslint/semi": "off",
-        "semi": [2, "always"]
-    }
+  "env": {
+      "es2021": true,
+      "node": true,
+      "jest": true
+  },
+  "extends": "standard-with-typescript",
+  "overrides": [
+  ],
+  "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": ["./tsconfig.json"]
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+      "@typescript-eslint/semi": "off",
+      "semi": [2, "always"]
+  }
 }
-
+```
 # Instalando o husky
   Permite utilizarmos os hook do git para garantir que não iremos commitar código fora das
   diretrizes parametrizadas no eslint e que não estiverem passando no teste de unit do jest
@@ -126,19 +144,97 @@ Abaixo temos um exemplo do arquivo de configuração do eslint **.eslintrc.json*
 ```
   A biblioteca lint-stage determina que o lint e jest atuem apenas nos arquivos que se encontram na staged area do git.
 
-    O primeiro comando instala o husky, criando a pasta de mesmo nome.
-    O segundo comando cria arquivo de pre-commit com o comando que está entre aspas dentro dele.
-    Fazendo com que um commit que não passe no teste realizado pelo Jest não seja efetivado.
+  O primeiro comando instala o husky, criando a pasta de mesmo nome.
+  O segundo comando cria arquivo de pre-commit com o comando que está entre aspas dentro dele.
+  Fazendo com que um commit que não passe no teste realizado pelo Jest não seja efetivado.
 ```
     ~/projeto/compras
     » npx husky install
     » npx husky add .husky/pre-commit "npx lint-staged"
 ```
 ## Arquivo do lintstaged (lintstagedrc.json)
+Este arquivo define os comandos que atuaram nos arquivos na stage area disparado pelo hook do pre-commit.
+São executados o eslint para fixar os possiveis erros e o teste através do script **test:staged**
 ```
 {
   "*.ts": [
     "eslint 'src/**' --fix",
+    "npm run test:staged"
   ]
 }
+```
+# Instalando o Vitest.
+  Instala o Vitest, a biblioteca de teste para o typescript.
+
+```
+  ~/projeto/vitest-template
+  » npm install -D vitest
+```
+Abaixo temos um exemplo de arquivo de configuração do Vitest
+## Arquivo de configuração do Vitest (vitest.config.js)
+Este arquivo configura o vitest, dentre outras coisas, para reconhecer os alias _"@/*"_ e _"@/test/*"_
+```
+import { defineConfig } from "vitest/config";
+import path from "path";
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@/test": path.resolve(__dirname, "./test"),
+    },
+  },
+});
+```
+## Cria script para execução dos diversos testes
+No script **test:staged** abaixo a opção --run informa ao vitest nao entre eno modo watch.
+```
+  "scripts": {
+    "test": "vitest",
+    "test:staged": "vitest related ./test/*.spec.ts --run",
+    "test:coverage": "vitest run --coverage"
+  },
+```
+  ## Executando os teste.
+  Para executar o jest direto ou através de um script
+```
+  ~/projeto/vitest-template
+  » npx vitest
+  » npm run <script>
+```
+
+  ## Snippet para Vitest.
+  Abaixo temos um snippet para evitarmos digitar código repetido toda vez
+  que formos elaborar um teste. O texto do prefixo é chave para "buscar" o snippet.
+```
+{
+  "Jest Test": {
+    "prefix": ["test"],
+      "body": [
+        "describe('$1', () => {",
+        "  test('$2', () => {",
+        "$3",
+        "  });",
+        "});",
+        ""
+      ],
+    "description": "A describe block for Jest"
+  }
+}
+```
+## Crie arquivo .eslintignore
+Criar o arquivo abaixo para evitar a atuação do eslint sobre eles
+```
+.husky
+.vscode
+coverage
+dist
+node_modules
+public
+./data
+vitest.config.ts
 ```
