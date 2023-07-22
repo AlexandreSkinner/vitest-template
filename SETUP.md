@@ -106,11 +106,35 @@ Importante que sejam nas versões abaixo:
 ```
   ~/projeto/vitest-template
   » npm init @eslint/config
-
 ```
-Abaixo temos um exemplo do arquivo de configuração do eslint **.eslintrc.json**
+O processo de configuração apresentará um quiz que deverá ter as respostas abaixo:
+
+✅ How would you like to use ESLint? · **style**
+
+✅ What type of modules does your project use? · **esm**
+
+✅ Which framework does your project use? ·**none**
+
+✅ Does your project use TypeScript? · No / **Yes**
+
+✅ Where does your code run? · No items were selected
+
+✅ How would you like to define a style for your project? · **guide**
+
+✅ Which style guide do you want to follow? · **standard-with-typescript**
+
+✅ What format do you want your config file to be in? · **JSON**
+<p>Checking peerDependencies of eslint-config-standard-with-typescript@latest</p>
+The config that you've selected requires the following dependencies:
+
+eslint-config-standard-with-typescript@latest @typescript-eslint/eslint-plugin@^5.50.0 eslint@^8.0.1 eslint-plugin-import@^2.25.2 eslint-plugin-n@^15.0.0 eslint-plugin-promise@^6.0.0 typescript@*
+
+✅ Would you like to install them now? · No / **Yes**
+
+✅ Which package manager do you want to use? · **npm**
 
 ## Arquivo de configuração do lint (.eslintrc.json)
+Abaixo temos um exemplo do arquivo de configuração do eslint **.eslintrc.json**
 ```
 {
   "env": {
@@ -237,4 +261,36 @@ node_modules
 public
 ./data
 vitest.config.ts
+```
+# Prepara o buid
+Para que o código javascript gerado na compilação tenha a capacida de resolver os import do tipo '@/index'
+é necessário instalas duas bibliotecas como dependencia de desenvolvimento.
+
+```
+  ~/projeto/compras
+  » npm i tsc-alias tsconfig-paths -D
+```
+Além disso precisamos editar o script build no arquivo package.json
+
+```
+"scripts": {
+  "build": "tsc -p tsconfig-build.json && tsc-alias"
+}
+```
+
+## Arquivo tsconfig-build
+Este arquivo tem por objetivo impedir que os códigos
+da pasta **test** sejam buildados (transpilados para javascript).
+
+```
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["test"]
+}
+```
+
+Para isso temos que passando o parâmetro abaixo, no script de buid
+
+```
+tsc -p tsconfig-build.json
 ```
