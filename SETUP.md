@@ -72,6 +72,7 @@ Este arquivo é inspecionado pelo typescript no momento da compilação
     "outDir": "./dist",
     "moduleResolution": "node",
     "strict": true,
+    "noEmitOnError": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
